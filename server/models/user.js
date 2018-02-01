@@ -1,4 +1,4 @@
-const Model = require('../db/model')
+const Model = require('./main')
 const {log, now } = require('../utils/utils')
 const table = 'users'
 const db = require('../db/dbUser')
@@ -23,16 +23,24 @@ class User extends Model{
 		// 得到的 dbuser 是实例 取不到值 待解决
 		// dbuser = [ user { username: 'xxxx', ....}]
 		const u = JSON.parse(JSON.stringify(dbuser))
+		let result = '没结果'
 		if(u.length > 0) {
 			const userLogic = form.username == u[0].username
 			const pwdLogic = form.password == u[0].password
-			const result =  userLogic && pwdLogic
-			log('登录成功')
-			return result
+			const login =  userLogic && pwdLogic
+			if (login == true) {
+				result = '登录成功'
+			} else {
+				result = '登录失败,密码错误'
+			}
 		} else {
-			log('登录失败')
-			return '帐号密码错误'
+			result =  '登录失败,帐号不存在'
 		}
+		return result
+	}
+	static async currentUser (form) {
+		// 通过 session 获取 uid, 如果没有的话就设置成空字符串
+		// 如何设置 session
 	}
 }
 
@@ -47,3 +55,4 @@ const  test = async () => {
 if (require.main === module) {
 	test()
 }
+module.exports = User
