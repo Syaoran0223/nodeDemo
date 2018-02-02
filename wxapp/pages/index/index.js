@@ -1,5 +1,6 @@
 //index.js
 //获取应用实例
+const { log, api } = require('./utils/config.js')
 const app = getApp()
 
 Page({

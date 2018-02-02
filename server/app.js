@@ -8,7 +8,7 @@ const { secretKey } = require('./config')
 // 先初始化一个 express 实例
 const app = express()
 
-// app.use(bodyParser.json());
+app.use(bodyParser.json());
 // 设置 bodyParser
 app.use(bodyParser.urlencoded({
 	extended: true,
@@ -31,7 +31,7 @@ const wechatIndex = require('./routes/wechat')
 app.use('/', routeIndex)
 app.use('/wx', wechatIndex)
 // 套路
-const run = (port = 80, host = '') => {
+const run = (port = 3000, host = '') => {
 	const server = app.listen(port, host, () => {
 		const address = server.address()
 		host = address.address
@@ -41,7 +41,7 @@ const run = (port = 80, host = '') => {
 }
 
 if (require.main === module) {
-	const port = 80
-	// const host = '0.0.0.0'
+	const port = 3000
+	const host = '0.0.0.0'
 	run(port)
 }
