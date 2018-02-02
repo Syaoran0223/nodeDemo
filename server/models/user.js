@@ -13,16 +13,19 @@ class User extends Model{
 		this.openid = form.openid || ''
 		this.session = form.session || ''
 		this.score = form.score || 0
+		this.ct = now
+		this.ut = now
 	}
 	static register (form) {
 		const u = super.create(form)
-		db.useRelate.userCreat(form)
+		db.useRelate.userCreat(u)
 	}
 	static async login(form) {
 		const dbuser = await db.useRelate.userFind(form)
 		// 得到的 dbuser 是实例 取不到值 待解决
 		// dbuser = [ user { username: 'xxxx', ....}]
-		const u = JSON.parse(JSON.stringify(dbuser))
+		// const u = JSON.parse(JSON.stringify(dbuser))
+		let u = dbuser
 		let result = '没结果'
 		if(u.length > 0) {
 			const userLogic = form.username == u[0].username
@@ -46,10 +49,11 @@ class User extends Model{
 
 const  test = async () => {
 	const form = {
-		username: 'feng0',
+		username: 'feng10',
 		password: '123',
 	}
 	const u = User.login(form)
+	// const u = User.register(form)
 
 }
 if (require.main === module) {

@@ -27,7 +27,8 @@ const useRelate =  {
 		const u = await DbUser.findAll({
 			where: {
 				username: form.username,
-			}
+			},
+			raw: true
 		})
 		return u
 	},
