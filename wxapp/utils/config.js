@@ -1,5 +1,5 @@
 const log = console.log.bind(console, '>>>>')
-const host = 'http://127.0.0.1:4000'
+const host = '45.77.28.242'
 const apiUrl = function (url) {
 	var result = host + url
 	return result

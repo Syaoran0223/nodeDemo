@@ -42,6 +42,6 @@ const run = (port = 3000, host = '') => {
 
 if (require.main === module) {
 	const port = 80
-	const host = '0.0.0.0'
-	run(port, host)
+	// const host = '0.0.0.0'
+	run(port)
 }
