@@ -1,17 +1,31 @@
 const log = console.log.bind(console, '>>>>')
-const host = 'http://www.syaoran.cc/wx'
+// const host = 'http://www.syaoran.cc/wx'
+const host = 'http://127.0.0.1:3555/wx'
 const apiUrl = function (url) {
 	var result = host + url
 	return result
 }
 const api = {
-	login: apiUrl('/login'),
-	test: apiUrl('/test')
-
-
+	openid: apiUrl('/openid'),
+	userInfo: apiUrl('/userInfo'),
+}
+const ajax = (api, data, method = 'post', callback )=> {
+	wx.request({
+		url: api,
+		data: data,
+		method: method,
+		header: {
+			'content-type': 'application/json' // 默认值
+		},
+		success: function (res) {
+			console.log(`${api}`, res)
+			callback()
+		}
+	})
 }
 
 module.exports = {
 	log,
 	api,
+	ajax,
 }

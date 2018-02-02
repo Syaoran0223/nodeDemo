@@ -1,6 +1,6 @@
 //index.js
 //获取应用实例
-const { log, api } = require('./utils/config.js')
+const { log, api, ajax} = require('../../utils/config.js')
 const app = getApp()
 
 Page({
@@ -17,7 +17,7 @@ Page({
     })
   },
   onLoad: function () {
-	  this.ajaxTest()
+	//   this.ajaxTest()
     if (app.globalData.userInfo) {
       this.setData({
         userInfo: app.globalData.userInfo,
@@ -55,7 +55,7 @@ Page({
   },
   ajaxTest: function(e) {
 	  wx.request({
-		  url: 'http://127.0.0.1:4000/wx/test',
+		  url: api.test,
 		  data: {a:'111', b: '123'},
 		  method: 'post',
 		  header: {
@@ -65,5 +65,11 @@ Page({
 			  console.log('ajaxTest', res)
 		  }
 	  })
+	  const data = {
+		  test: 'test'
+	  }
+	//   ajax(api.test, function(res){
+	// 	  console.log('res', res)
+	//   })
   }
 })

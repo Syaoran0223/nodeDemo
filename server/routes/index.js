@@ -1,7 +1,7 @@
 // 这里是把 express.Router 的实例赋值给 index
 const express = require('express')
 const index = express.Router()
-const User = require('../models/user')
+// const User = require('../models/user')
 const {log} = require('../utils/utils')
 index.get('/', (request, response) => {
 	// 通过 session 获取当前用户 显示用户昵称
