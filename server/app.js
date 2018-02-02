@@ -8,6 +8,7 @@ const { secretKey } = require('./config')
 // 先初始化一个 express 实例
 const app = express()
 
+// app.use(bodyParser.json());
 // 设置 bodyParser
 app.use(bodyParser.urlencoded({
 	extended: true,
@@ -25,9 +26,10 @@ nunjucks.configure('templates', {
 })
 // 引入路由文件
 const routeIndex = require('./routes/index')
+const wechatIndex = require('./routes/wechat')
 // 设置路由
 app.use('/', routeIndex)
-
+app.use('/wx', wechatIndex)
 // 套路
 const run = (port = 3000, host = '') => {
 	const server = app.listen(port, host, () => {
@@ -39,7 +41,7 @@ const run = (port = 3000, host = '') => {
 }
 
 if (require.main === module) {
-	const port = 4000
+	const port = 80
 	const host = '0.0.0.0'
 	run(port, host)
 }
