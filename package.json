@@ -12,6 +12,9 @@
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "sequelize": "^4.32.2",
+    "socket-io": "^1.0.0",
+    "socket.io": "^2.0.4",
+    "socket.io-client": "^2.0.4",
     "wafer-node-session": "^1.0.10"
   }
 }
