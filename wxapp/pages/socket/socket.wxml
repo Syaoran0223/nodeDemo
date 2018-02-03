@@ -1,2 +1,13 @@
 <!--pages/socket/socket.wxml-->
 <text>pages/socket/socket.wxml</text>
+
+<view>
+    <view>题目列表</view>
+    <view wx:for='{{questionList}}' wx:for-item="question" wx:key='id'>
+        {{question.id}}. {{question.title}}
+
+        <view wx:for='{{question.options}}' wx:for-tiem="option" wx:key='*this'>
+		{{option}}
+        </view>
+    </view>
+</view>
