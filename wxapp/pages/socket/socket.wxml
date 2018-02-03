@@ -2,12 +2,14 @@
 <text>pages/socket/socket.wxml</text>
 
 <view>
+    倒计时: {{time}}
     <view>题目列表</view>
     <view wx:for='{{questionList}}' wx:for-item="question" wx:key='id'>
         {{question.id}}. {{question.title}}
 
         <view wx:for='{{question.options}}' wx:for-tiem="option" wx:key='*this'>
-		{{option}}
+            {{option}}
         </view>
     </view>
+    <button bindtap='sendMessage'>发送！！</button>
 </view>

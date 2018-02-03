@@ -148,7 +148,7 @@ aws4@^1.2.1, aws4@^1.6.0:
   version "1.6.0"
   resolved "http://registry.npm.taobao.org/aws4/download/aws4-1.6.0.tgz#83ef5ca860b2b32e4a0deedee8c771b9db57471e"
 
-backo2@1.0.2:
+backo2@1.0.2, backo2@^1.0.2:
   version "1.0.2"
   resolved "http://registry.npm.taobao.org/backo2/download/backo2-1.0.2.tgz#31ab1ac8b129363463e35b3ebb69f4dfcfba7947"
 
@@ -313,11 +313,11 @@ combined-stream@^1.0.5, combined-stream@~1.0.5:
   dependencies:
     delayed-stream "~1.0.0"
 
-component-bind@1.0.0:
+component-bind@1.0.0, component-bind@^1.0.0:
   version "1.0.0"
   resolved "http://registry.npm.taobao.org/component-bind/download/component-bind-1.0.0.tgz#00c608ab7dcd93897c0009651b1d3a8e1e73bbd1"
 
-component-emitter@1.2.1:
+component-emitter@1.2.1, component-emitter@^1.2.1:
   version "1.2.1"
   resolved "http://registry.npm.taobao.org/component-emitter/download/component-emitter-1.2.1.tgz#137918d6d78283f7df7a6b7c5a63e140e69425e6"
 
@@ -848,7 +848,7 @@ iconv-lite@0.4.19, iconv-lite@^0.4.18:
   version "0.4.19"
   resolved "http://registry.npm.taobao.org/iconv-lite/download/iconv-lite-0.4.19.tgz#f7468f60135f5e5dad3399c0a81be9a1603a082b"
 
-indexof@0.0.1:
+indexof@0.0.1, indexof@^0.0.1:
   version "0.0.1"
   resolved "http://registry.npm.taobao.org/indexof/download/indexof-0.0.1.tgz#82dc336d232b9062179d05ab3293a66059fd435d"
 
@@ -1280,9 +1280,21 @@ parse-glob@^3.0.4:
     is-extglob "^1.0.0"
     is-glob "^2.0.0"
 
+parsejson@0.0.2:
+  version "0.0.2"
+  resolved "http://registry.npm.taobao.org/parsejson/download/parsejson-0.0.2.tgz#5be9ba70fe45b8520fa7d02c28cff46f83183a96"
+  dependencies:
+    better-assert "~1.0.0"
+
 parseqs@0.0.5:
   version "0.0.5"
   resolved "http://registry.npm.taobao.org/parseqs/download/parseqs-0.0.5.tgz#d5208a3738e46766e291ba2ea173684921a8b89d"
+  dependencies:
+    better-assert "~1.0.0"
+
+parseuri@0.0.4:
+  version "0.0.4"
+  resolved "http://registry.npm.taobao.org/parseuri/download/parseuri-0.0.4.tgz#806582a39887e1ea18dd5e2fe0e01902268e9350"
   dependencies:
     better-assert "~1.0.0"
 
@@ -1902,6 +1914,17 @@ ws@~3.3.1:
     async-limiter "~1.0.0"
     safe-buffer "~5.1.0"
     ultron "~1.1.0"
+
+wxapp-socket-io@^1.0.0:
+  version "1.0.0"
+  resolved "http://registry.npm.taobao.org/wxapp-socket-io/download/wxapp-socket-io-1.0.0.tgz#458b67ca09b16179988024de3429941ef41ced76"
+  dependencies:
+    backo2 "^1.0.2"
+    component-bind "^1.0.0"
+    component-emitter "^1.2.1"
+    indexof "^0.0.1"
+    parsejson "0.0.2"
+    parseuri "0.0.4"
 
 xmlhttprequest-ssl@~1.5.4:
   version "1.5.5"

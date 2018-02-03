@@ -57,18 +57,12 @@ class WechatUser extends Model {
 				openid: form.openid
 			}
 		})
-		log('update status', u)
 		let list = ['nickName', 'avatarUrl']
 		for(let f in form) {
 			if(list.includes(f)) {
-				log('xxxx f', f)
-				log('debug f', form[f])
-				log('debug uf', u[f])
 				u[f] = form[f]
 			}
 		}
-
-
 		await u.save()
 		// 如何更新数据
 	}

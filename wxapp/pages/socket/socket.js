@@ -3,6 +3,7 @@ const app = getApp()
 const { log } = require('../../utils/util')
 Page({
 	data: {
+		time: '',
 		questionList: [
 			// {
 			// 	id: 0,
@@ -35,33 +36,31 @@ Page({
 
 	onLoad: function (options) {
 		// 开始进行连接服务器
-		this.onSocketEvent()
-	},
-	// getQuestion: function(socket, data) {
-	// 	socket.emit('question', function(res) {
-	// 		log('res', res)
-	// 		this.setData('questionList', res)
-	// 	})
-	// },
-	onSocketEvent: function () {
 		const socket = app.globalData.socket
+		// this.onSocketEvent()
+		this.init()
+	},
+	// init 
+	init() {
+		const name = 'feng'
 		const that = this
-		socket.on('login', function (msg) {
-			// 用户连接后发送第一题
+		const socket = app.globalData.socket
+		socket.emit('init', name)
+		// 保持接收图片
+		socket.on('1stQuestion', function (msg) {
 			let data = that.data.questionList
 			data.push(msg)
 			that.setData({ 'questionList': data })
 			console.log('收到的到一题', that.data.questionList)
 		})
-		socket.emit('client', '来自前端的消息')
-
-		//
-		// socket.on('user left', function(msg) {
-		//  wx.showToast({
-		//    title: msg.username + ' 离开了房间',
-		//    icon: 'loading',
-		//    duration: 1000
-		//  })
-		// })
+		socket.on('time', (time)=> {
+			log('倒计时', time)
+			that.setData({'time': time})
+		})
+	},
+	// 发送答案 请求新的题目 在 init 接收
+	sendMessage(e) {
+		const socket = app.globalData.socket
+		socket.emit('nextQuestion', '答案A')
 	},
 })
