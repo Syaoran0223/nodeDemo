@@ -1,12 +1,15 @@
 // 这里是把 express.Router 的实例赋值给 index
 const express = require('express')
+const fs = require('fs')
 const index = express.Router()
 // const User = require('../models/user')
 const {log} = require('../utils/utils')
 index.get('/', (request, response) => {
 	// 通过 session 获取当前用户 显示用户昵称
 	// 如果没登录则显示游客
-	response.render('index/index.html')
+	// response.render('index/index.html')
+	// let html = fs.readFileSync('../../templates/index/index.html')
+	response.send('1111111111111')
 })
 index.post('/login', async (request, response) => {
 	const form = request.body

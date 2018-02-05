@@ -9,8 +9,8 @@ App({
 		logs.unshift(Date.now())
 		wx.setStorageSync('logs', logs)
 		// 连接socket
-		const socket = io.connect("ws://127.0.0.1:3555")
-		// const socket = io.connect("ws://www.syaoran.cc:3555")
+		// const socket = io.connect("ws://127.0.0.1:3555")
+		const socket = io.connect("ws://www.syaoran.cc")
 		socket.emit('clientInit', 'app init')
 		this.globalData.socket = socket
 
