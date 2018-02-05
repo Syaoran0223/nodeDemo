@@ -42,7 +42,7 @@ app.use('/wx', wechatIndex)
 // redisInit()
 
 // 运行服务器
-const server = app.listen(port = 80, function() {
+const server = app.listen(port = 3555, function() {
 	const host = server.address().address
 	const port = server.address().port
 	console.log('应用实例，访问地址为 http://%s:%s', host, port)
