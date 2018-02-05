@@ -4,7 +4,7 @@ const nunjucks = require('nunjucks')
 const bodyParser = require('body-parser')
 const session = require('cookie-session')
 const fs = require('fs')
-const redis = require('redis')
+// const redis = require('redis')
 const {log} = require('./utils/utils')
 const {appId, appSecret, secretKey} = require('./config')
 const socketRoom = require('./models/socketRoom')
@@ -26,19 +26,19 @@ app.use('/', routeIndex)
 app.use('/wx', wechatIndex)
 
 // 设置 redis
-const redisClient = redis.createClient('6379', '127.0.0.1')
-// redis 链接错误
-redisClient.on('error', function(error) {
-	console.log('redisClient', error)
-})
-// redis 测试
-const redisInit = () => {
-	redisClient.set('roomInfo', '1')
-	redisClient.get('roomInfo', function(err, res) {
-
-	})
-
-}
+// const redisClient = redis.createClient('6379', '127.0.0.1')
+// // redis 链接错误
+// redisClient.on('error', function(error) {
+// 	console.log('redisClient', error)
+// })
+// // redis 测试
+// const redisInit = () => {
+// 	redisClient.set('roomInfo', '1')
+// 	redisClient.get('roomInfo', function(err, res) {
+//
+// 	})
+//
+// }
 // redisInit()
 
 // 运行服务器
