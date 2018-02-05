@@ -12,4 +12,5 @@
         </view>
     </view>
     <button bindtap='sendMessage'>发送！！</button>
+	<button bindtap='joingroup'> 加入聊天组 </button>
 </view>

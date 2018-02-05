@@ -49,7 +49,7 @@ const countdownTime = function(time, s, status) {
 	clearInterval(set)
 	let t = time
 	var set = setInterval(function() {
-		log('status', status)
+		log('status', status, time)
 		if (status == true) {
 			t--
 			s.emit('time', t)
@@ -77,8 +77,10 @@ let nextQuestion = function(s) {
 
 }
 
+let groupA = 'groupA'
+let groupB = 'groupB'
 io.on('connection', function(s) {
-	log('新用户连接成功',)
+	log('新用户连接成功')
 	// 返回用户信息 得分
 	// 用户连接后发送第一题
 	s.on('init', function(res) {
@@ -86,6 +88,17 @@ io.on('connection', function(s) {
 		// s.emit('newQuestion', questionList[1])
 		nextQuestion(s)
 	})
+	// 进入分组 group1
+	s.on(groupA, function(data) {
+		s.join(groupA)
+		log('分组信息A', data )
+	})
+	s.in(groupB).emit('event_name', '这里是来自分组A的信息')
+	s.on(groupB, function(data) {
+		s.join(groupB)
+		log('分组信息B', data )
+	})
+	s.in(group).emit('event_name', '这里是来自分组B的信息')
 })
 
 

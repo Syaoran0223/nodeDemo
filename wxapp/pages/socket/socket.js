@@ -58,6 +58,13 @@ Page({
 			that.setData({'time': time})
 		})
 	},
+	//  加入分组1
+	joingroup() {
+		const that = this
+		const socket = app.globalData.socket
+		let group = 'group1'
+		socket.emit('group1', '来自客户端的信息，加入聊天组')
+	},
 	// 发送答案 请求新的题目 在 init 接收
 	sendMessage(e) {
 		const socket = app.globalData.socket
