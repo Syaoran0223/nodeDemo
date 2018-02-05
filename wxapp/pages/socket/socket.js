@@ -46,12 +46,25 @@ Page({
 		const that = this
 		const socket = app.globalData.socket
 		socket.emit('init', name)
-		// 保持接收图片
+		// 接收房间好
+		socket.on('room', function(roomId) {
+			// 加入房间
+			console.log('房间号', roomId)
+			socket.emit(roomId)
+			socket.on(roomId, function(res) {
+				console.log('进入房间后返回的信息', res)
+				wx.showToast({
+					title: res,
+					icon: 'success',
+					duration: 2000
+				})
+			})
+		})
 		socket.on('1stQuestion', function (msg) {
 			let data = that.data.questionList
 			data.push(msg)
 			that.setData({ 'questionList': data })
-			console.log('收到的到一题', that.data.questionList)
+			console.log('1stQuestion', that.data.questionList)
 		})
 		socket.on('time', (time)=> {
 			log('倒计时', time)
@@ -59,12 +72,24 @@ Page({
 		})
 	},
 	//  加入分组1
-	joingroup() {
+	joingroupA() {
 		const that = this
 		const socket = app.globalData.socket
-		let group = 'group1'
-		socket.emit('group1', '来自客户端的信息，加入聊天组')
+		socket.emit('groupA', '来自客户端的信息，加入groupA')
+		socket.on('groupA', (res) => {
+			console.log('on gtoupA res', res)
+		})
 	},
+	joingroupB() {
+		const that = this
+		const socket = app.globalData.socket
+		let group = 'groupB'
+		socket.emit(group, '来自客户端的信息，加入groupB')
+		socket.on('groupBmsg', function (res) {
+			console.log('res', res)
+		})
+	},
+
 	// 发送答案 请求新的题目 在 init 接收
 	sendMessage(e) {
 		const socket = app.globalData.socket
