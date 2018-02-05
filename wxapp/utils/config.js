@@ -1,5 +1,5 @@
 const log = console.log.bind(console, '>>>>')
-// const host = 'http://www.syaoran.cc/wx'
+// const host = 'https://www.syaoran.cc/wx'
 const host = 'http://127.0.0.1:3555/wx'
 const apiUrl = function (url) {
 	var result = host + url
