@@ -36,20 +36,20 @@ wx.post('/openid', async(req, res) => {
 		method: 'get'
 	}
 	// 获取 openid
-	const openidData = await rp(openidForm)
+	// const openidData = await rp(openidForm)
 	const openid = openidData.openid
 	// 获取用户信息 之后处理
 	const sendData = {
 		openid,
 	}
 	// 保存 openid
-	const reuslt =  await wechatUser.createByOpenid(sendData)
-	res.send(reuslt)
+	// const reuslt =  await wechatUser.createByOpenid(sendData)
+	res.send('成功g')
 })
 //通过openid 查询更新用户信息
 wx.post('/userInfo', async (req, res) => {
 	const form = req.body
-	const u = await wechatUser.update(form)
+	// const u = await wechatUser.update(form)
 	res.send('success')
 })
 module.exports = wx
