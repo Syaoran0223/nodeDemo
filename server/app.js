@@ -23,6 +23,20 @@ const wechatIndex = require('./routes/wechat')
 
 // 设置路由
 app.use('/', routeIndex)
+const sendHtml = function(path, response) {
+	const fs = require('fs')
+	const options = {
+		encoding: 'utf-8'
+	}
+	fs.readFile(path, options, function(err, data) {
+		response.send(data)
+	})
+}
+
+// app.get('/', function(req, res) {
+// 	const path = 'index.html'
+// 	sendHtml(path, res)
+// })
 app.use('/wx', wechatIndex)
 
 // 设置 redis
@@ -140,6 +154,9 @@ const autoRoom = (user, userId) => {
 }
 let userList = {}
 io.sockets.on('connection', function(socket) {
+	socket.on('error', function(msg) {
+		console.log('error', msg)
+	})
 	let userId = socket.id
 	let roomId
 	// 连接用户后分配房间
@@ -159,11 +176,17 @@ io.sockets.on('connection', function(socket) {
 
 		// nextQuestion(socket)
 	})
+	socket.on('nextQuestion', function(res) {
+		socket.emit('1stQuestion', '新题目请求成功')
+	})
+
 	socket.on('joinRoom', function(res) {
 
 	})
+	//
 
-
+	// html 测试
+	socket.emit('message', '111111')
 	// 进入分组 group1
 	// socket.on(groupA, function(data) {
 	// 	socket.join(groupA, () => {
@@ -177,6 +200,7 @@ io.sockets.on('connection', function(socket) {
 	//	class
 
 })
+
 
 
 module.exports = {

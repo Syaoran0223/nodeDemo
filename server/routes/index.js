@@ -9,7 +9,7 @@ index.get('/', (request, response) => {
 	// 如果没登录则显示游客
 	// response.render('index/index.html')
 	// let html = fs.readFileSync('../../templates/index/index.html')
-	response.send('1111111111111')
+	response.render('1111111111111')
 })
 index.post('/login', async (request, response) => {
 	const form = request.body

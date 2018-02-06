@@ -72,6 +72,9 @@ Page({
 			log('倒计时', time)
 			that.setData({ 'time': time })
 		})
+		socket.emit('error', function(res){
+			console.log('debug error', res)
+		} )
 	},
 	//  加入分组1
 	joingroupA() {
@@ -92,26 +95,6 @@ Page({
 		})
 	},
 
-	// 小程序官方 API
-	wxSocket() {
-		wx.connectSocket({
-			url: 'wss://www.syaoran.cc/wss'
-			// url: 'wss://127.0.0.1'
-		})
-		wx.onSocketOpen(function (res) {
-			wx.sendSocketMessage({
-				data: "weapp message"
-			})
-		})
-		wx.onSocketMessage(function (res) {
-			wx.showToast({
-				title: res.data,
-				icon: 'success',
-				duration: 2000
-			})
-			console.log('小程序收到服务器消息：' + res.data)
-		})
-	},
 	// 发送答案 请求新的题目 在 init 接收
 	sendMessage(e) {
 		const socket = app.globalData.socket

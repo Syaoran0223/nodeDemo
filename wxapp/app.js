@@ -9,12 +9,10 @@ App({
 		logs.unshift(Date.now())
 		wx.setStorageSync('logs', logs)
 		// 连接socket
-		const socket = io.connect("ws://127.0.0.1:3555")
+		const socket = io.connect("ws://192.168.1.124:3555")
 		// const socket = io.connect("ws://www.syaoran.cc:3555")
 		socket.emit('clientInit', 'app init')
 		this.globalData.socket = socket
-
-
 		// 登录
 		wx.login({
 			success: codeData => {
@@ -30,6 +28,8 @@ App({
 						log('openidData', openidData)
 						wx.getSetting({
 							success: res => {
+								console.log('run it')
+								
 								log('res', res)
 								if (res.authSetting['scope.userInfo']) {
 									// 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
@@ -63,6 +63,9 @@ App({
 							}
 						})
 
+					},
+					fail: (res) => {
+						console.log('fail', res)
 					}
 				})
 			}

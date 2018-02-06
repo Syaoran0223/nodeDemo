@@ -1,6 +1,7 @@
 const log = console.log.bind(console, '>>>>')
-// const host = 'https://www.syaoran.cc/wx'
-const host = 'http://127.0.0.1:3555/wx'
+// const host = 'http://www.syaoran.cc:3555/wx'
+// const host = 'http://127.0.0.1:3555/wx'
+const host = 'http://192.168.1.124:3555/wx'
 const apiUrl = function (url) {
 	var result = host + url
 	return result
