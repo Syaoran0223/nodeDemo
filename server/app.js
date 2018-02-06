@@ -4,9 +4,9 @@ const nunjucks = require('nunjucks')
 const bodyParser = require('body-parser')
 const session = require('cookie-session')
 const fs = require('fs')
-// const redis = require('redis')
 const {log} = require('./utils/utils')
 const {appId, appSecret, secretKey} = require('./config')
+const redisClient = require('./redisConfig')
 const socketRoom = require('./models/socketRoom')
 const app = express()
 
@@ -40,20 +40,28 @@ const sendHtml = function(path, response) {
 app.use('/wx', wechatIndex)
 
 // 设置 redis
-// const redisClient = redis.createClient('6379', '127.0.0.1')
-// // redis 链接错误
-// redisClient.on('error', function(error) {
-// 	console.log('redisClient', error)
-// })
-// // redis 测试
-// const redisInit = () => {
-// 	redisClient.set('roomInfo', '1')
-// 	redisClient.get('roomInfo', function(err, res) {
-//
-// 	})
-//
-// }
-// redisInit()
+// redis 链接错误
+redisClient.on('error', function(error) {
+	console.log('redisClient', error)
+})
+// redis 测试
+const redisInit = async() => {
+	let data = {
+			group1: [
+				{
+					'小黄': 'xxxxxxxxxx',
+				},
+
+			]
+		}
+
+	await redisClient.set('roomInfo', JSON.stringify(data))
+	// await redisClient.get('roomInfo', function(res) {
+	// 	log('redis ', res)
+	// })
+
+}
+redisInit()
 
 // 运行服务器
 const server = app.listen(port = 3555, function() {
@@ -109,29 +117,38 @@ let nextQuestion = function(s) {
 
 }
 
-let groupA = 'groupA'
-let groupB = 'groupB'
-// 房间列表
+let userList = {feng1: 'Hjoq3j68I4i7Dq7cAAAA' }
 // let roomInfo = {
-// 	group1: ['小黄', '老王'],
+// 	group1: [
+// 		{
+// 			'小黄': 'xxxxxxxxxx',
+// 		},
+//
+// 	]
 // }
-let roomInfo = {
-	group1: [
-		{
-			'小黄': 'xxxxxxxxxx',
-		},
-		{
-			'小红': 'yyyyyyyyyyy'
-		}
-	]
-}
 let use
 // 自动设置房间号 每组两人
-const autoRoom = (user, userId) => {
+const autoRoom = async(user, userId) => {
+	// 判断是否已在房间内 防止刷新
+	let users = Object.keys(userList)
+	// if ( users.includes(user)) {
+	// 	log('已经存在用户列表中')
+	// 	return false
+	// }
+	//
 	let form = {}
 	form[user] = userId
-
-	let keys = Object.keys(roomInfo)
+	// 从 redis 取数据
+	let roomInfo = await redisClient.get('roomInfo', function(err, res) {
+		if(err) {
+			log('err', err)
+		} else  {
+			log('正式使用 redis', res)
+			return res
+		}
+	})
+	log('取出来的 redis')
+	let keys = Object.keys(JSON.parse(roomInfo))
 	let status = false
 	// 循环判断所有房间的人数，如果不满足2人 则添加
 	for (let r in roomInfo) {
@@ -139,6 +156,7 @@ const autoRoom = (user, userId) => {
 		if (val.length < 2) {
 			roomInfo[r].push(form)
 			status = true
+			log('roomInfo', roomInfo)
 			return r
 		}
 	}
@@ -147,63 +165,57 @@ const autoRoom = (user, userId) => {
 		let index = 'gourp' + Number(keys.length + 1)
 		roomInfo[index] = []
 		roomInfo[index].push(form)
-		return index
+		// 没有对手 返回匹配失败
+		log('roomInfo', roomInfo)
+		return status
 
 	}
 	console.log('roomInfo result', roomInfo)
 }
-let userList = {}
 io.sockets.on('connection', function(socket) {
-	socket.on('error', function(msg) {
-		console.log('error', msg)
-	})
+
 	let userId = socket.id
 	let roomId
+	let name
 	// 连接用户后分配房间
 	socket.on('init', function(res) {
 		// 分配 房间
-		let name = res
+		name = res
 		// 房间号
 		let roomId = autoRoom(res, userId)
+		if (roomId == false) {
+			// 没有用户处于匹配列表
+			log('当前没有正在匹配的用户', roomId)
+			// socket.emit('')
+			return
+		}
 		socket.name = res
 		userList[name] = userId
+		log('userList', userList)
 		// 向单个用户推送信息，发送题目是按组内成员循环推送
 		if(userList[name] != undefined) {
 			// 返回房间号
 			socketRoom.createRoom(roomId, io, socket)
 			io.sockets.connected[userList[name]].emit('room', roomId)
 		}
-
 		// nextQuestion(socket)
 	})
 	socket.on('nextQuestion', function(res) {
 		socket.emit('1stQuestion', '新题目请求成功')
 	})
+	socket.on('disconnect', function(res) {
+		// 用户断开连接后从用户列表内删除
+		delete userList[name]
+		// 删除该用户所在房间 之后再写
 
-	socket.on('joinRoom', function(res) {
-
+		log('delete user', '用户', name, '列表', userList)
 	})
-	//
-
-	// html 测试
-	socket.emit('message', '111111')
-	// 进入分组 group1
-	// socket.on(groupA, function(data) {
-	// 	socket.join(groupA, () => {
-	// 		io.to(groupA).emit('groupA', '这里是来自分组1的信息')
-	// 	})
-	// })
-	// socket.on(groupB, function(data) {
-	// 	socket.join(groupB)
-	// 	io.to(groupB).emit('groupBmsg', '这里是来自分组2的信息')
-	// })
-	//	class
-
 })
 
 
 
 module.exports = {
 	io,
+	// roomInfo
 }
 
