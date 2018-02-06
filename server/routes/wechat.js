@@ -37,11 +37,11 @@ wx.post('/openid', async(req, res) => {
 	}
 	// 获取 openid
 	// const openidData = await rp(openidForm)
-	const openid = openidData.openid
+	// const openid = openidData.openid
 	// 获取用户信息 之后处理
-	const sendData = {
-		openid,
-	}
+	// const sendData = {
+	// 	openid,
+	// }
 	// 保存 openid
 	// const reuslt =  await wechatUser.createByOpenid(sendData)
 	res.send('成功g')

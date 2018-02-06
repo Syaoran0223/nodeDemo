@@ -1,5 +1,5 @@
 const {io} = require('../app')
-class socketRoom {
+class SocketRoom {
 	constructor(index, io, s) {
 		this.index = index
 		console.log('io',io)
@@ -12,7 +12,7 @@ class socketRoom {
 				console.log('执行了')
 				io.to(index).emit(index, `这里是来自${index}的信息`)
 				io.to(index).on(index, (res) => {
-					console.log('自动添加的问题')
+					console.log('自动添加的问题', res)
 				})
 			})
 		})
@@ -20,6 +20,9 @@ class socketRoom {
 	static test(s) {
 		console.log('s', s)
 	}
+	static create(form) {
+		return new this(form)
+	}
 }
 
-module.exports = socketRoom
+module.exports = SocketRoom
