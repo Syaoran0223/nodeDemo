@@ -1,7 +1,7 @@
 {
 	"pages": [
-		"pages/socket/socket",		
 		"pages/index/index",
+		"pages/socket/socket",		
 		"pages/logs/logs"
 	],
 	"window": {
@@ -9,25 +9,6 @@
 		"navigationBarBackgroundColor": "#fff",
 		"navigationBarTitleText": "WeChat",
 		"navigationBarTextStyle": "black"
-	},
-	"tabBar": {
-		"color": "#999999",
-		"selectedColor": "black",
-		"list": [
-			{
-				"pagePath": "pages/index/index",
-				"text": "首页",
-				"postion": "20"
-			},
-			{
-				"pagePath": "pages/socket/socket",
-				"text": "答题",
-				"postion": "20"
-			},
-			{
-				"pagePath": "pages/logs/logs",
-				"text": "logs"
-			}
-		]
 	}
+	
 }

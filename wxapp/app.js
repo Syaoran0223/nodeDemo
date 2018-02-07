@@ -1,6 +1,7 @@
 //app.js
-const { log, api } = require('./utils/config.js')
+const { log, api, socketUrl } = require('./utils/config.js')
 const io = require('./utils/wxapp-socket-io.js')
+
 // const io = require('./utils/socket-io.js')
 App({
 	onLaunch:  function () {
@@ -9,9 +10,7 @@ App({
 		logs.unshift(Date.now())
 		wx.setStorageSync('logs', logs)
 		// 连接socket
-		// const socket = io.connect("ws://192.168.1.124:3555")
-		const socket = io.connect("ws://45.77.28.242:3555")
-		socket.emit('clientInit', 'app init')
+		const socket = io.connect(socketUrl)
 		this.globalData.socket = socket
 		// 登录
 		wx.login({
@@ -25,18 +24,15 @@ App({
 					data: code,
 					method: 'post',
 					success: function (openidData) {
-						log('openidData', openidData)
+						// log('openidData', openidData)
 						wx.getSetting({
 							success: res => {
-								console.log('run it')
-								
-								log('res', res)
 								if (res.authSetting['scope.userInfo']) {
 									// 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
 									wx.getUserInfo({
 										success: ress => {
 											let that = this
-											console.log('ress', ress)
+											// console.log('ress', ress)
 											let userInfo = ress.userInfo
 											// 可以将 res 发送给后台解码出 unionId
 											// that.globalData.userInfo = ress.userInfo
@@ -48,13 +44,13 @@ App({
 											}
 											// 保存openid
 											userInfo.openid = openidData.data.openid
-											log('new userInfo', userInfo)
+											// log('new userInfo', userInfo)
 											wx.request({
 												url: api.userInfo,
 												data: userInfo,
 												method: 'post',
 												success: (r) => {
-													log('发送用户信息', r)
+													// log('发送用户信息', r)
 												}
 											})
 										}

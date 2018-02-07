@@ -64,11 +64,11 @@ const redisInit = async() => {
 redisInit()
 
 // 运行服务器
-const server = app.listen(port = 3555, function() {
-	const host = server.address().address
-	const port = server.address().port
-	console.log('应用实例，访问地址为 http://%s:%s', host, port)
-})
+// const server = app.listen(port = 3555, function() {
+// 	const host = server.address().address
+// 	const port = server.address().port
+// 	console.log('应用实例，访问地址为 http://%s:%s', host, port)
+// })
 
 
 // 发送的题目
@@ -118,14 +118,14 @@ let nextQuestion = function(s) {
 }
 
 let userList = {feng1: 'Hjoq3j68I4i7Dq7cAAAA' }
-// let roomInfo = {
-// 	group1: [
-// 		{
-// 			'小黄': 'xxxxxxxxxx',
-// 		},
-//
-// 	]
-// }
+let roomInfo = {
+	group1: [
+		{
+			'小黄': 'xxxxxxxxxx',
+		},
+
+	]
+}
 let use
 // 自动设置房间号 每组两人
 const autoRoom = async(user, userId) => {
@@ -139,7 +139,7 @@ const autoRoom = async(user, userId) => {
 	let form = {}
 	form[user] = userId
 	// 从 redis 取数据
-	let roomInfo = await redisClient.get('roomInfo', function(err, res) {
+	let roomInfoStringify = await redisClient.get('roomInfo', function(err, res) {
 		if(err) {
 			log('err', err)
 		} else  {
@@ -147,8 +147,9 @@ const autoRoom = async(user, userId) => {
 			return res
 		}
 	})
-	log('取出来的 redis')
-	let keys = Object.keys(JSON.parse(roomInfo))
+	// let keys = Object.keys(JSON.parse(roomInfo))
+	let roomInfo = JSON.parse(roomInfoStringify)
+	// log('取出来的 redis', roomInfo)
 	let status = false
 	// 循环判断所有房间的人数，如果不满足2人 则添加
 	for (let r in roomInfo) {

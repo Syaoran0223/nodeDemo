@@ -1,10 +1,19 @@
 // pages/socket/socket.js
 const app = getApp()
+const _ = require('../../utils/lodash.js')
 const { log } = require('../../utils/util')
 Page({
 	data: {
 		time: '',
-		questionList: [
+		selClass:'',
+		currentSel: '5',
+		selList: {
+			"A": 0,
+			"B": 1,
+			"C": 2,
+			"D": 3,
+		},
+		question: [
 			// {
 			// 	id: 0,
 			// 	title: '3+5+5 = ？',
@@ -32,6 +41,7 @@ Page({
 			// 	],
 			// },
 		],
+		roomId: '',
 	},
 
 	onLoad: function (options) {
@@ -53,51 +63,47 @@ Page({
 			// 加入房间
 			console.log('房间号', roomId)
 			socket.emit(roomId)
+			that.data.roomId = roomId
 			socket.on(roomId, function (res) {
 				console.log('进入房间后返回的信息', res)
+				that.setData({question: res})
+				log('data.question', that.data.question)				
 				wx.showToast({
-					title: res,
+					title: roomId || 'fail',
 					icon: 'success',
 					duration: 2000
 				})
 			})
 		})
-		socket.on('1stQuestion', function (msg) {
-			let data = that.data.questionList
-			data.push(msg)
-			that.setData({ 'questionList': data })
-			console.log('1stQuestion', that.data.questionList)
-		})
 		socket.on('time', (time) => {
 			log('倒计时', time)
 			that.setData({ 'time': time })
 		})
-		socket.emit('error', function(res){
-			console.log('debug error', res)
-		} )
 	},
-	//  加入分组1
-	joingroupA() {
-		const that = this
-		const socket = app.globalData.socket
-		socket.emit('groupA', '来自客户端的信息，加入groupA')
-		socket.on('groupA', (res) => {
-			console.log('on gtoupA res', res)
-		})
-	},
-	joingroupB() {
-		const that = this
-		const socket = app.globalData.socket
-		let group = 'groupB'
-		socket.emit(group, '来自客户端的信息，加入groupB')
-		socket.on('groupBmsg', function (res) {
-			console.log('res', res)
-		})
-	},
+
 
 	// 发送答案 请求新的题目 在 init 接收
 	sendMessage(e) {
+		let sel = e.target.dataset.sel
+		this.data.currentSel = this.data.selList[sel]
+		log('currentSel', this.data.currentSel )
+		// 选项列表
+		let options = this.data.question.options
+		// 正确答案
+		let anwser = _.find(options, function(o){
+			return o.anwser == true
+		})
+		// 对比答案
+		let logic = sel === anwser.order
+		if(logic == true) {
+			this.data.selClass = 'true'
+			log('选择正确', sel, anwser.order)
+		} else {
+			this.data.selClass = 'false'
+			log('选择错误', sel, anwser.order)
+		}
+		// 选择后发送告诉后端用户选择完成
 		const socket = app.globalData.socket
-		socket.emit('nextQuestion', '答案A')
+		socket.emit('chooseReady', '答题完成')		
 	},
 })

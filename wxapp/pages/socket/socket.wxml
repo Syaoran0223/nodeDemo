@@ -4,14 +4,17 @@
 <view>
     倒计时: {{time}}
     <view>题目列表</view>
-    <view wx:for='{{questionList}}' wx:for-item="question" wx:key='id'>
+    <view class='questionList'>
         {{question.id}}. {{question.title}}
-
-        <view wx:for='{{question.options}}' wx:for-tiem="option" wx:key='*this'>
-            {{option}}
-        </view>
     </view>
-    <button bindtap='sendMessage'>发送！！</button>
-	<button bindtap='joingroupA'> 加入聊天组A </button>
-	<button bindtap='joingroupB'> 加入聊天组B </button>
+	<view >
+		<view wx:for='{{question.options}}' wx:for-item='option' wx:index wx:key='id'>
+			<view bindtap='sendMessage'data-sel='{{option.order}}' 	class='questionList' 
+			class="{{index == currentSel ? 'yes': 'no'}}">
+				{{option.order}}.{{option.option}}
+			</view>	
+		</view>
+
+	</view>
+    <!-- <button bindtap='sendMessage'>发送！！</button> -->
 </view>

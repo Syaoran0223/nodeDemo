@@ -1,1 +1,11 @@
 /* pages/socket/socket.wxss */
+.questionList {
+	text-align: center;
+	margin: 20px auto;
+}
+.yes {
+	color: red;
+}
+.no {
+	/* color: aqua; */
+}
