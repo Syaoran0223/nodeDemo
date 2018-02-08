@@ -1,10 +1,6 @@
-const {io, roomInfo} = require('../app')
+const {io, roomInfo} = require('../appTest')
 const {log } = require('../utils/utils')
 const questionList = require('../db/questionsdb')
-// log('roomInfo', roomInfo)
-const redis = require('redis')
-const redisClient = require('../redisConfig')
-
 
 class SocketRoom {
 	constructor(index, io, s) {
@@ -26,7 +22,6 @@ class SocketRoom {
 		return question
 	}
 	static createRoom(index, io, s) {
-
 		console.log('createRoom', index, typeof(index))
 		// let roomId = index
 		const that = this

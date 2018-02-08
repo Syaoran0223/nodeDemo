@@ -43,13 +43,13 @@ wx.post('/openid', async(req, res) => {
 		openid,
 	}
 	// 保存 openid
-	const reuslt =  await wechatUser.createByOpenid(sendData)
-	res.send('成功g')
+	res.send(sendData)
 })
 //通过openid 查询更新用户信息
 wx.post('/userInfo', async (req, res) => {
 	const form = req.body
-	// const u = await wechatUser.update(form)
-	res.send('success')
+	const u = await wechatUser.update(form)
+	const info = await wechatUser.findByOpenid(form)
+	res.send(info)
 })
 module.exports = wx

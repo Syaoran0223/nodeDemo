@@ -57,30 +57,13 @@ Page({
 		const name = 'feng'
 		const that = this
 		const socket = app.globalData.socket
-		socket.emit('init', name)
+		socket.emit('init', {ready: true})
 		// 接收房间好
-		socket.on('room', function (roomId) {
-			// 加入房间
-			console.log('房间号', roomId)
-			socket.emit(roomId)
-			that.data.roomId = roomId
-			socket.on(roomId, function (res) {
-				console.log('进入房间后返回的信息', res)
-				that.setData({question: res})
-				log('data.question', that.data.question)				
-				wx.showToast({
-					title: roomId || 'fail',
-					icon: 'success',
-					duration: 2000
-				})
-			})
-		})
 		socket.on('time', (time) => {
 			log('倒计时', time)
 			that.setData({ 'time': time })
 		})
 	},
-
 
 	// 发送答案 请求新的题目 在 init 接收
 	sendMessage(e) {

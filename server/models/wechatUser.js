@@ -16,7 +16,7 @@ class WechatUser extends Model {
 		this.ct = now
 		this.ut = now
 	}
-	static async FindByOpenid (form) {
+	static async findByOpenid (form) {
 		const u = await wx.findAll({
 			where: {
 				openid: form.openid,
@@ -27,7 +27,7 @@ class WechatUser extends Model {
 	}
 	// 初始化通过 openid 新增用户
 	static async createByOpenid (form) {
-		const u = await this.FindByOpenid(form)
+		const u = await this.findByOpenid(form)
 		if (u.length == 0) {
 			const userInit = super.create(form)
 			const u = await wx.create(userInit)
@@ -66,6 +66,7 @@ class WechatUser extends Model {
 		await u.save()
 		// 如何更新数据
 	}
+
 }
 
 const  test = async () => {
