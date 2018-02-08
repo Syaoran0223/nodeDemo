@@ -29,6 +29,7 @@ class UserList {
 
 	// 增加用户
 	addUser(form) {
+		log('addUser form', form)
 		let newList = this.load()
 		let r = true
 		for (var i = 0; i < newList.length; i++) {

@@ -102,7 +102,7 @@ app.post('/loginStatus', async (req, res) => {
 	// log('debug list ---------')
 	// userList.log()
 	// log('debug list ---------')
-
+	res.send('11')
 })
 let usocket = {}
 let user = [];
@@ -118,14 +118,8 @@ io.sockets.on('connection', function(socket) {
 	socket.on('applyBattle', function(res) {
 		let username = res
 		socket.username = res
-		// socket.disconnected = true
-		// log('debug 查看每个连接', socket.disconnected)
-		// log('debug 每个连接的数量', io.eio.clientsCount)
-		// log('debug 查看所有连接', socket.nsp.connected )
 		usocket[username] = socket;
 		user.push(username);
-		// log('debug socket user', user)
-
 		// 将用户加入准备列表
 		userData = {
 			username: res,
@@ -142,6 +136,7 @@ io.sockets.on('connection', function(socket) {
 
 		// userList.log()
 		// 将玩家加入准备列表
+		log('userData', userData)
 		userList.addUser(userData)
 
 		// 查找等待列表中除自己以外的玩家
@@ -155,8 +150,9 @@ io.sockets.on('connection', function(socket) {
 		// 找到用户信息后加入房间
 		if(equal != false) {
 			log('返回的对手数据', equal)
-			io.sockets.connected[userData.userId].emit('applyResult', equal)
+			// io.sockets.connected[userData.userId].emit('applyResult', equal)
 			// io.sockets.connected[equal.userId].emit('applyResult', equal)
+			socket.broadcast.emit('applyResult', equal);
 			userList.ready(userData)
 			userList.ready(equal)
 			// userList.log()
@@ -165,6 +161,7 @@ io.sockets.on('connection', function(socket) {
 			// 将房间号发给指定用户加入房间
 			io.sockets.connected[userData.userId].emit('room', roomNumber)
 			// 暂时没有对手 模拟数据无法发送 测试时使用
+			log('debug connceted', io.sockets.connected)
 			io.sockets.connected[equal.userId].emit('room', roomNumber)
 			// 监听用户进入s房间
 			socket.on('join', function(roomId) {

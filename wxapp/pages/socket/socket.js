@@ -63,6 +63,10 @@ Page({
 			log('倒计时', time)
 			that.setData({ 'time': time })
 		})
+		// socket.disconnect()
+		// socket.on('disconnect', function(res) {
+		// 	console.log('断开了')
+		// })
 	},
 
 	// 发送答案 请求新的题目 在 init 接收

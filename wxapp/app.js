@@ -11,6 +11,46 @@ App({
 		wx.setStorageSync('logs', logs)
 		// 连接socket
 		const socket = io.connect(socketUrl)
+		socket.on('applyResult', function (res) {
+			log('准备完成返回的对手数据', res)
+			// that.isLogin()
+			wx.setStorageSync('equal', res)
+			// 返回 false 则提示 暂无匹配到对手
+			if (res == false) {
+				// socket.disconnect();
+				// socket.on('disconnect', function () {
+				// 	console.log('disconnect client event....');
+				// });
+				log('debug false')
+
+				wx.showToast({
+					title: '匹配失败',
+					icon: 'succse',
+					duration: 2000
+				})
+				return
+			} else {
+				// 有对手 加入房间 转跳到对战页面
+				socket.on('room', function (roomId) {
+					wx.setStorageSync('roomId', roomId)
+					log('roomId', roomId)
+					socket.emit('join', roomId)
+					let toRoom = false
+					socket.on(roomId, function (res) {
+						if (toRoom == false && res) {
+							toRoom == true
+							//  确认进入房间后 对战页面
+							wx.navigateTo({
+								url: '../socket/socket',
+							})
+							// wx.redirectTo({
+							// 	url: '../socket/socket',
+							// })
+						}
+					})
+				})
+			}
+		})
 		this.globalData.socket = socket
 		// 登录
 		wx.login({

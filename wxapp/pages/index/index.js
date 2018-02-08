@@ -3,7 +3,6 @@
 const { log, api, ajax } = require('../../utils/config.js')
 const app = getApp()
 
-
 Page({
 	data: {
 		motto: 'Hello World',
@@ -15,6 +14,7 @@ Page({
 		// this.getUserInfo()
 		// this.applyBattle()
 		this.isLogin()
+		// this.applyResult()
 	},
 	// 获取用户信息前置「可不用，待测试」
 	getUserInfoBefore: function () {
@@ -48,9 +48,10 @@ Page({
 	// 获取用户信息「需要用户授权」   
 	getUserInfo: function () {
 		this.getUserInfoBefore()
+
 		// let u = wx.getStorageSync('openid')
 		// log('index getUserinfo', u)
-		// this.setData({ 'openid': u })
+		// this.setData(({ 'openid': u })
 	},
 	// 点击进入匹配环节
 	randomInt(min, max) {
@@ -67,6 +68,7 @@ Page({
 			}
 		})
 	},
+
 	applyBattle() {
 		let that = this
 		let random = this.randomInt(0, 20)
@@ -75,43 +77,6 @@ Page({
 		let userInfo = wx.getStorageSync('userInfo')
 		log('debug userInfo', userInfo.nickName)
 		socket.emit('applyBattle', userInfo.nickName)
-		socket.on('applyResult', function (res) {
-			log('准备完成返回的对手数据', res)
-			that.isLogin()
-			wx.setStorageSync('equal', res)
-			socket.emit('t', function(res) {
-				console.log('ebug init es', res)
-			})
-			// 返回 false 则提示 暂无匹配到对手
-			if (res == false) {
-				// socket.disconnect();
-				wx.showToast({
-					title: '匹配失败',
-					icon: 'succse',
-					duration: 2000
-				})
-				return 
-			} else {
-				// 有对手 加入房间 转跳到对战页面
-				socket.on('room', function (roomId) {
-					wx.setStorageSync('roomId', roomId)
-					log('roomId', roomId)
-					socket.emit('join', roomId)
-					let toRoom = false
-					socket.on(roomId, function (res) {
-						if(toRoom == false && res) {
-							toRoom ==true
-							//  确认进入房间后 对战页面
-							// wx.navigateTo({
-							// 	url: '../socket/socket',
-							// })
-							wx.redirectTo({
-								url: '../socket/socket',
-							})
-						}
-					})
-				})
-			}
-		})
+		
 	}
 })

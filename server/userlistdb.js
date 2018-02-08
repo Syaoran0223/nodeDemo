@@ -1,19 +1,13 @@
 [
   {
     "username": " 新思网络",
-    "userId": "tZGRM1aOZjsqvem_AAAB",
+    "userId": "-Jjof5QY24lRgtTfAAAD",
     "waitStatus": true,
     "ready": true
   },
   {
     "username": "小狼君",
-    "userId": "CSW-G8USL051Cr8MAAAC",
-    "waitStatus": true,
-    "ready": true
-  },
-  {
-    "username": "feng",
-    "userId": "oPgknQ01oPklFTQvAAAD",
+    "userId": "hC59txnaqrJWlRlpAAAE",
     "waitStatus": true,
     "ready": true
   }
