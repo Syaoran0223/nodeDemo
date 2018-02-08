@@ -4,7 +4,7 @@ const wx = express.Router()
 const wechatUser = require('../models/wechatUser')
 const {log} = require('../utils/utils')
 const request = require('request')
-
+const fs = require('fs')
 const {appId, appSecret} = require('../config')
 
 // 封装 request promise
@@ -52,4 +52,7 @@ wx.post('/userInfo', async (req, res) => {
 	const info = await wechatUser.findByOpenid(form)
 	res.send(info)
 })
+
+
+
 module.exports = wx

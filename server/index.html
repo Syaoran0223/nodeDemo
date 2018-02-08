@@ -14,8 +14,9 @@
     <button id="id-get-online-users" name="button">当前在线</button>
     <br>
     <textarea id="my-textarea"></textarea>
-    <div id='socket'></div>
+
     <script type="text/javascript">
+        const log = console.log.bind(console, '>>>>')
         const logIn = document.querySelector('#id-login');
         logIn.addEventListener('click', function () {
             dologIn()
@@ -27,23 +28,31 @@
             socket.on('connect', function () {
                 console.log('连接成功');
             })
-            // 监听登录验证信息
-            socket.on('whoAreYou', () => {
-                const name = prompt("输入你得名字", "")
-                // 进行登录验证
-                socket.emit('name', name)
-            })
-            // 监听消息广播
-            socket.on('message', function (msg) {
-                console.log(msg);
-                var s = document.querySelector('#socket')
-                s.innerHTML = msg
-            })
             // 发送聊天消息
             const sendBtn = document.querySelector('#id-send-message')
             sendBtn.addEventListener('click', function () {
                 const msg = document.querySelector('#my-textarea').value
-                socket.emit('message', msg)
+                socket.emit('applyBattle', 'feng')
+                socket.on('applyResult', function (res) {
+			log('准备完成返回的对手数据', res)
+
+			// wx.setStorageSync('equal', res)
+			// 返回 false 则提示 暂无匹配到对手
+			if (res == false) {
+				log('返回匹配对手的数据')
+			} else {
+				// 有对手 加入房间 转跳到对战页面
+				socket.on('room', function (roomId) {
+					// wx.setStorageSync('roomId', roomId)
+					// log('roomId', roomId)
+					socket.emit('join', roomId)
+					let toRoom = false
+					socket.on(roomId, function (res) {
+                        console.log('进入房间', res)
+					})
+				})
+			}
+		})
             })
             // 登出
             const logOut = document.querySelector('#id-logout')

@@ -16,6 +16,7 @@ const apiUrl = function (url) {
 const api = {
 	openid: apiUrl('/openid'),
 	userInfo: apiUrl('/userInfo'),
+	loginSatus: ('http://192.168.1.125:3666/loginStatus')
 }
 const ajax = (api, data, method = 'post', callback )=> {
 	wx.request({

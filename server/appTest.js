@@ -21,9 +21,22 @@ app.use(bodyParser.urlencoded({
 // 引入路由文件
 const routeIndex = require('./routes/index')
 const wechatIndex = require('./routes/wechat')
-
+// 返回html 页面
+const sendHtml = function(path, response) {
+	const fs = require('fs')
+	const options = {
+		encoding: 'utf-8'
+	}
+	fs.readFile(path, options, function(err, data) {
+		response.send(data)
+	})
+}
+app.get('/', function(req, res) {
+	const path = 'index.html'
+	sendHtml(path, res)
+})
 // 设置路由
-app.use('/', routeIndex)
+// app.use('/', routeIndex)
 app.use('/wx', wechatIndex)
 
 //
@@ -33,6 +46,8 @@ var server = app.listen(port = 3666, function() {
 	const port = server.address().port
 	console.log('应用实例，访问地址为 http://%s:%s', host, port)
 })
+
+
 
 // 设置 socket 监听 server
 const io = require('socket.io').listen(server)
@@ -82,17 +97,35 @@ const addData = () => {
 		userList.addUser(u)
 	}
 }
+// 查看用户是否登录
+app.post('/loginStatus', async (req, res) => {
+	// log('debug list ---------')
+	// userList.log()
+	// log('debug list ---------')
 
+})
+let usocket = {}
+let user = [];
 
-// userList.ready(f)
 io.sockets.on('connection', function(socket) {
-	// addData()
+	socket.removeAllListeners()
 	let userId = socket.id
 	let roomId
 	let userData
+
 	//	监听用户连接 记录已准备的用户
 	// addData()
 	socket.on('applyBattle', function(res) {
+		let username = res
+		socket.username = res
+		// socket.disconnected = true
+		// log('debug 查看每个连接', socket.disconnected)
+		// log('debug 每个连接的数量', io.eio.clientsCount)
+		// log('debug 查看所有连接', socket.nsp.connected )
+		usocket[username] = socket;
+		user.push(username);
+		// log('debug socket user', user)
+
 		// 将用户加入准备列表
 		userData = {
 			username: res,
@@ -100,6 +133,12 @@ io.sockets.on('connection', function(socket) {
 			waitStatus: true,
 			ready: false,
 		}
+		const loginStatus = userList.findSelf(userData)
+		// 已经登录的话断开这次连接
+		// if(loginStatus == true ) {
+		// 	io.sockets.connected[userData.userId].disconnect(true)
+		// 	return
+		// }
 
 		// userList.log()
 		// 将玩家加入准备列表
@@ -107,18 +146,20 @@ io.sockets.on('connection', function(socket) {
 
 		// 查找等待列表中除自己以外的玩家
 		let equal = userList.findUser(userData) || false
-		log('send before equal', equal)
 		// userList.log()
 		// 发送查找结果给前端 若为 false 则显示未匹配到对手
 		io.sockets.connected[userData.userId].emit('applyResult', equal)
+		if(equal == false ) {
+
+		}
 		// 找到用户信息后加入房间
 		if(equal != false) {
 			log('返回的对手数据', equal)
 			io.sockets.connected[userData.userId].emit('applyResult', equal)
-			io.sockets.connected[equal.userId].emit('applyResult', equal)
+			// io.sockets.connected[equal.userId].emit('applyResult', equal)
 			userList.ready(userData)
 			userList.ready(equal)
-			userList.log()
+			// userList.log()
 			// 创建房间号
 			let roomNumber = roomInfo.createRoom()
 			// 将房间号发给指定用户加入房间
@@ -134,8 +175,14 @@ io.sockets.on('connection', function(socket) {
 				// 监听指定房间信息
 				socket.in(roomId).on('init', function(res) {
 					//模拟对手数据
-					equal.ready = true
-					userData.ready = res.ready
+					io.sockets.connected[userData.userId].on('init', function(res) {
+						console.log('init res', res)
+						log('debug 每个连接的数量', io.eio.clientsCount)
+						log('debug 查看所有连接', socket.nsp.connected )
+
+					})
+					// equal.ready = true
+					// userData.ready = res.ready
 				})
 				// socket.in(roomId).on('')
 			})
@@ -148,12 +195,13 @@ io.sockets.on('connection', function(socket) {
 		// userList.cancel()
 		// userList.log()
 	})
+
 })
-// const socket = io.connect();
 
 
 module.exports = {
 	io,
 	// roomInfo
+	userList,
 }
 

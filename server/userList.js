@@ -71,6 +71,18 @@ class UserList {
 		log( 'index', index, '查找的结果', newList[index])
 		return newList[index]
 	}
+	// 查找自己
+	findSelf(form) {
+		let list = this.load()
+		let r = false
+		for (var i = 0; i < list.length; i++) {
+			var l = list[i]
+			if(l.username == form.username) {
+				r = true
+			}
+		}
+		return r
+	}
 	ready(form) {
 		let list = this.load()
 		let newList = list.map((e)=> {
