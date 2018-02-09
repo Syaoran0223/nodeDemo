@@ -1,6 +1,6 @@
 const {io, roomInfo} = require('../appTest')
 const {log } = require('../utils/utils')
-const questionList = require('../db/questionsdb')
+const questionList = require('../questionsdb')
 
 class SocketRoom {
 	constructor(index, io, s) {

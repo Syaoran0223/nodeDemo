@@ -1,97 +1,126 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>聊天室</title>
-        <script src="/socket.io/socket.io.js"></script>
-    </script>
+<head>
+    <meta charset="utf-8">
+    <title>聊天室</title>
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
-    <button id="id-login" name="button">登录</button>
-    <button id="id-logout" name="button">登出</button>
-    <button id="id-send-message" name="button">发送消息</button>
-    <button id="id-get-online-users" name="button">当前在线</button>
-    <br>
-    <textarea id="my-textarea"></textarea>
+<button id="id-login" name="button">登录</button>
+<button id="id-logout" name="button">登出</button>
+<button id="id-send-message" name="button">发送消息</button>
+<button id="id-get-online-users" name="button">当前在线</button>
+<br>
+<textarea id="my-textarea"></textarea>
 
-    <script type="text/javascript">
-        const log = console.log.bind(console, '>>>>')
-        const logIn = document.querySelector('#id-login');
-        logIn.addEventListener('click', function () {
-            dologIn()
-        })
+<script type="text/javascript">
 
-        const dologIn = function () {
-            // 建立 socket 连接
-            const socket = io.connect()
-            socket.on('connect', function () {
-                console.log('连接成功');
-            })
-            // 发送聊天消息
-            const sendBtn = document.querySelector('#id-send-message')
-            sendBtn.addEventListener('click', function () {
-                const msg = document.querySelector('#my-textarea').value
-                socket.emit('applyBattle', 'feng')
-                socket.on('applyResult', function (res) {
-			log('准备完成返回的对手数据', res)
 
-			// wx.setStorageSync('equal', res)
-			// 返回 false 则提示 暂无匹配到对手
-			if (res == false) {
-				log('返回匹配对手的数据')
-			} else {
-				// 有对手 加入房间 转跳到对战页面
-				socket.on('room', function (roomId) {
-					// wx.setStorageSync('roomId', roomId)
-					// log('roomId', roomId)
-					socket.emit('join', roomId)
-					let toRoom = false
-					socket.on(roomId, function (res) {
-                        console.log('进入房间', res)
-					})
+	// 全局监听
+	const socket = io.connect()
+	socket.on('connect', function() {
+		console.log('连接成功')
+	})
+	socket.on('applyResult', function(res) {
+		log('准备完成返回的对手数据', res)
+		// wx.setStorageSync('equal', res)
+		// 返回 false 则提示 暂无匹配到对手
+		if (res == false) {
+			log('返回匹配对手的数据')
+		} else {
+			// 有对手 加入房间 转跳到对战页面
+			socket.on('room', function(roomId) {
+				// wx.setStorageSync('roomId', roomId)
+				// log('roomId', roomId)
+				socket.emit('join', roomId)
+				let toRoom = false
+				socket.on(roomId, function(res) {
+					console.log('进入房间', res)
 				})
+			})
+		}
+	})
+	socket.on('room', function (roomId) {
+//		wx.setStorageSync('roomId', roomId)
+		log('roomId', roomId)
+		socket.emit('join', roomId)
+		let toRoom = true
+		socket.on(roomId, function (res) {
+			if(res && toRoom == true) {
+//				let u = wx.getStorageSync('userInfo')
+//				log('用户信息', u, u.nickName)
+				socket.emit('init', {username:'feng',ready:true})
+				toRoom = false
+//				wx.navigateTo({
+//					url: '../socket/socket',
+//				})
 			}
 		})
-            })
-            // 登出
-            const logOut = document.querySelector('#id-logout')
-            logOut.addEventListener('click', function () {
-                socket.disconnect()
-            })
-        }
+		let roomQuestion = roomId + 'question'
+		let roomQuestionStatus = true
+		socket.on(roomQuestion, function(res) {
+			log('接收到的题目', res)
+			if(roomQuestionStatus == true) {
+//				wx.setStorageSync('question', res)
+				roomQuestionStatus = false
+			}
+		})
+	})
+	const log = console.log.bind(console, '>>>>')
+	const logIn = document.querySelector('#id-login')
+//	logIn.addEventListener('click', function() {
+//	})
+	const dologIn = function() {
+		// 建立 socket 连接
 
-        const getUserList = {
-            method: 'get',
-            url: '/api/chat/online-users',
-            contentType: 'application/json',
-            callback: function (response) {
-                console.log('当前在线：', response)
-            }
-        }
+		// 发送聊天消息
+		const sendBtn = document.querySelector('#id-send-message')
+		sendBtn.addEventListener('click', function() {
+			const msg = document.querySelector('#my-textarea').value
+			socket.emit('applyBattle', 'feng')
 
-        const ajax = function (request) {
-            const r = new XMLHttpRequest()
-            r.open(request.method, request.url, true)
-            if (request.contentType !== undefined) {
-                r.setRequestHeader('Content-Type', request.contentType)
-            }
-            r.onreadystatechange = function (event) {
-                if (r.readyState === 4) {
-                    request.callback(r.response)
-                }
-            }
-            if (request.method === 'GET') {
-                r.send()
-            } else {
-                r.send(request.data)
-            }
-        }
+		})
+		// 登出
+		const logOut = document.querySelector('#id-logout')
+		logOut.addEventListener('click', function() {
+			socket.disconnect()
+		})
+	}
+	dologIn()
 
-        const userList = document.querySelector('#id-get-online-users')
-        userList.addEventListener('click', function () {
-            ajax(getUserList)
-        })
-    </script>
+	const getUserList = {
+		method: 'get',
+		url: '/api/chat/online-users',
+		contentType: 'application/json',
+		callback: function(response) {
+			console.log('当前在线：', response)
+		},
+	}
+
+	const ajax = function(request) {
+		const r = new XMLHttpRequest()
+		r.open(request.method, request.url, true)
+		if (request.contentType !== undefined) {
+			r.setRequestHeader('Content-Type', request.contentType)
+		}
+		r.onreadystatechange = function(event) {
+			if (r.readyState === 4) {
+				request.callback(r.response)
+			}
+		}
+		if (request.method === 'GET') {
+			r.send()
+		} else {
+			r.send(request.data)
+		}
+	}
+
+	const userList = document.querySelector('#id-get-online-users')
+	userList.addEventListener('click', function() {
+		ajax(getUserList)
+	})
+</script>
 </body>
+
 </html>

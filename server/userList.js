@@ -2,7 +2,6 @@ const _ = require('lodash')
 const {log} = require('./utils/utils')
 const fs = require('fs')
 
-
 class UserList {
 	constructor(form) {
 		this.path = './userlistdb.js'
@@ -29,7 +28,7 @@ class UserList {
 
 	// 增加用户
 	addUser(form) {
-		log('addUser form', form)
+		// log('addUser form', form)
 		let newList = this.load()
 		let r = true
 		for (var i = 0; i < newList.length; i++) {
@@ -69,7 +68,7 @@ class UserList {
 		// 随机返回一个用户
 		let length = newList.length - 1
 		let index = this.randomInt(0, length)
-		log( 'index', index, '查找的结果', newList[index])
+		// log( 'index', index, '查找的结果', newList[index])
 		return newList[index]
 	}
 	// 查找自己
@@ -84,13 +83,12 @@ class UserList {
 		}
 		return r
 	}
-	ready(form) {
+	waitFalse(form) {
 		let list = this.load()
 		let newList = list.map((e)=> {
 			if(e.username == form.username) {
-				// e.waitStatus = false
-				e.ready = true
-
+				e.waitStatus = false
+				// e.ready = true
 			}
 			return e
 		})

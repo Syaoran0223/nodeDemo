@@ -35,17 +35,26 @@ App({
 					wx.setStorageSync('roomId', roomId)
 					log('roomId', roomId)
 					socket.emit('join', roomId)
-					let toRoom = false
+					let toRoom = true
 					socket.on(roomId, function (res) {
-						if (toRoom == false && res) {
-							toRoom == true
-							//  确认进入房间后 对战页面
+						log('room返回的数据', res)
+						if(toRoom == true) {
+							let u = wx.getStorageSync('userInfo')
+							log('用户信息', u, u.nickName)
+							socket.emit('init', {username:u.nickName,ready:true})
+							toRoom = false
 							wx.navigateTo({
 								url: '../socket/socket',
 							})
-							// wx.redirectTo({
-							// 	url: '../socket/socket',
-							// })
+						}
+					})
+					let roomQuestion = roomId + 'question'
+					let roomQuestionStatus = true
+					socket.on(roomQuestion, function(res) {
+						log('接收到的题目', res)
+						if(roomQuestionStatus == true) {
+							wx.setStorageSync('question', res)
+							roomQuestionStatus = false
 						}
 					})
 				})

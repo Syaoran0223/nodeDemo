@@ -54,19 +54,9 @@ Page({
 	},
 	// init 
 	init() {
-		const name = 'feng'
-		const that = this
-		const socket = app.globalData.socket
-		socket.emit('init', {ready: true})
-		// 接收房间好
-		socket.on('time', (time) => {
-			log('倒计时', time)
-			that.setData({ 'time': time })
-		})
-		// socket.disconnect()
-		// socket.on('disconnect', function(res) {
-		// 	console.log('断开了')
-		// })
+		// 显示题目
+		let question = wx.getStorageSync('question')
+		this.setData({question:question})
 	},
 
 	// 发送答案 请求新的题目 在 init 接收
@@ -85,12 +75,19 @@ Page({
 		if(logic == true) {
 			this.data.selClass = 'true'
 			log('选择正确', sel, anwser.order)
+			wx.showToast({
+				title: '回答正确',
+			})
 		} else {
 			this.data.selClass = 'false'
 			log('选择错误', sel, anwser.order)
+			wx.showToast({
+				title: '回答错误',
+				icon: 'none'
+			})
 		}
 		// 选择后发送告诉后端用户选择完成
 		const socket = app.globalData.socket
-		socket.emit('chooseReady', '答题完成')		
+		socket.emit('chooseReady', sel)		
 	},
 })

@@ -72,7 +72,7 @@ redisInit()
 
 
 // 发送的题目
-const questionList = require('./db/questionsdb')
+const questionList = require('./questionsdb')
 
 // 返回随机的整数
 function randomInt(min, max) {
